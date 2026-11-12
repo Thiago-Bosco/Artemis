@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Vercel Dev Dashboard",
+  "description": "Nova aba estilo Vercel para devs: relogio, busca multi-motor (/) e links rapidos.",
+  "version": "1.0.0",
+  "permissions": ["topSites"],
+  "icons": { "128": "icon128.png" },
+  "chrome_url_overrides": {
+    "newtab": "dashboard.html"
+  }
+}
