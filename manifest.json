@@ -1,10 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Vercel Dev Dashboard",
-  "description": "Nova aba estilo Vercel para devs: relogio, busca multi-motor (/) e links rapidos.",
-  "version": "1.0.0",
+  "name": "Artemis Dev Dashboard",
+  "description": "Nova aba personalizável para devs com comandos de busca, paletas e atalhos rápidos.",
+  "version": "1.1.0",
   "permissions": ["topSites"],
-  "icons": { "128": "icon128.png" },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "chrome_url_overrides": {
     "newtab": "dashboard.html"
   }

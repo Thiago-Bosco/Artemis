@@ -1,76 +1,122 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+<!doctype html>
+<html lang="pt-BR" data-theme="graphite">
 <head>
-<meta charset="utf-8">
-<title>Nova guia</title>
-<style>
-  :root {
-    --bg: #000; --panel: #0a0a0a; --border: #262626; --border-hi: #404040;
-    --text: #ededed; --dim: #888; --accent: #0070f3; --radius: 12px;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: radial-gradient(ellipse 120% 70% at 50% 110%, rgba(0,112,243,.06), transparent 60%), var(--bg);
-    color: var(--text); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 9vh;
-  }
-  .tri { width: 34px; height: 30px; margin-bottom: 18px; opacity: .9; }
-  .clock { font-size: 64px; font-weight: 600; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
-  .date { color: var(--dim); font-size: 15px; margin-top: 2px; }
-  .searchwrap { margin-top: 36px; width: min(620px, 86vw); display: flex; gap: 8px; align-items: center;
-    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 14px;
-    transition: border-color .15s; }
-  .searchwrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,112,243,.15); }
-  .searchwrap svg { flex: none; opacity: .55; }
-  #q { flex: 1; background: transparent; border: 0; outline: 0; color: var(--text); font-size: 16px; }
-  #q::placeholder { color: #555; }
-  #engine { background: #111; color: var(--text); border: 1px solid var(--border); border-radius: 8px;
-    padding: 7px 10px; font-size: 13px; outline: 0; cursor: pointer; }
-  .kbd { color: #555; font-size: 12px; border: 1px solid var(--border); border-radius: 5px; padding: 1px 7px; }
-  .grid { margin-top: 34px; width: min(620px, 86vw); display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-  .card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px;
-    text-decoration: none; color: var(--text); transition: .15s; }
-  .card:hover { border-color: var(--border-hi); transform: translateY(-1px); }
-  .card .t { font-size: 14px; font-weight: 500; }
-  .card .s { color: var(--dim); font-size: 11.5px; margin-top: 3px; }
-  .section { margin-top: 30px; width: min(620px, 86vw); }
-  .section h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: 10px; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .chip { background: var(--panel); border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px;
-    color: var(--text); font-size: 13px; text-decoration: none; transition: .15s; max-width: 190px;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .chip:hover { border-color: var(--accent); }
-  footer { margin-top: auto; padding: 22px; color: #333; font-size: 12px; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#000000">
+  <title>Artemis</title>
+  <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-  <svg class="tri" viewBox="0 0 76 65" fill="#fff"><path d="M37.59.25l36.95 64H.64l36.95-64z"/></svg>
-  <div class="clock" id="clock">--:--</div>
-  <div class="date" id="date"></div>
+  <a class="skip-link" href="#search-input">Ir para a busca</a>
 
-  <div class="searchwrap">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ededed" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <input id="q" type="text" placeholder="Buscar...  ( pressione / para focar )" autofocus autocomplete="off">
-    <select id="engine">
-      <option value="google">Google</option>
-      <option value="github">GitHub</option>
-      <option value="npm">npm</option>
-      <option value="mdn">MDN</option>
-      <option value="so">Stack Overflow</option>
-      <option value="vercel">Vercel Docs</option>
-      <option value="gpt">ChatGPT</option>
-    </select>
-    <span class="kbd">Enter</span>
-  </div>
+  <header class="toolbar" aria-label="Ferramentas">
+    <button class="icon-button" id="commands-button" type="button" aria-label="Abrir comandos" title="Comandos (Ctrl ou Cmd + K)">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M12 16h5"/></svg>
+    </button>
+    <button class="icon-button" id="settings-button" type="button" aria-label="Abrir configurações" title="Configurações">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></svg>
+    </button>
+  </header>
 
-  <div class="grid" id="links"></div>
+  <main class="dashboard">
+    <section class="hero" aria-labelledby="clock">
+      <img class="brand-mark" src="icons/icon128.png" alt="" width="44" height="44">
+      <time class="clock" id="clock" aria-live="off">--:--</time>
+      <p class="date" id="date"></p>
+    </section>
 
-  <div class="section">
-    <h3>Mais visitados</h3>
-    <div class="chips" id="top"></div>
-  </div>
+    <form class="search" id="search-form" role="search">
+      <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <label class="sr-only" for="search-input">Pesquisar ou abrir endereço</label>
+      <input id="search-input" type="text" placeholder="Pesquisar ou digitar um endereço" autocomplete="off" spellcheck="false">
+      <label class="sr-only" for="engine">Mecanismo de busca</label>
+      <select id="engine" name="engine"></select>
+      <kbd>Enter</kbd>
+      <p class="command-hint" id="command-hint" aria-live="polite"></p>
+    </form>
 
-  <footer>Vercel Dev Dashboard &middot; / para buscar</footer>
-  <script src="dashboard.js"></script>
+    <section class="content-section" aria-labelledby="shortcuts-title">
+      <div class="section-heading">
+        <h2 id="shortcuts-title">Atalhos</h2>
+        <button class="text-button" id="edit-shortcuts" type="button">Editar</button>
+      </div>
+      <div class="shortcut-grid" id="links"></div>
+    </section>
+
+    <section class="content-section" id="top-section" aria-labelledby="top-title">
+      <div class="section-heading"><h2 id="top-title">Mais visitados</h2></div>
+      <div class="chips" id="top"></div>
+      <p class="empty-state" id="top-status" role="status">Carregando sites...</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>Artemis</span><span aria-hidden="true">·</span><span><kbd>/</kbd> buscar</span>
+    <span aria-hidden="true">·</span><span><kbd>Ctrl K</kbd> comandos</span>
+  </footer>
+
+  <dialog class="dialog command-dialog" id="commands-dialog" aria-labelledby="commands-title">
+    <div class="dialog-header">
+      <div><p class="eyebrow">Navegação rápida</p><h2 id="commands-title">Comandos</h2></div>
+      <button class="icon-button close-dialog" type="button" aria-label="Fechar comandos">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <p class="dialog-description">Escolha onde pesquisar ou use o prefixo diretamente no campo.</p>
+    <div class="command-list" id="command-list"></div>
+  </dialog>
+
+  <dialog class="dialog settings-dialog" id="settings-dialog" aria-labelledby="settings-title">
+    <form method="dialog" class="dialog-header">
+      <div><p class="eyebrow">Personalização</p><h2 id="settings-title">Configurações</h2></div>
+      <button class="icon-button" value="close" aria-label="Fechar configurações">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </form>
+
+    <div class="settings-content">
+      <fieldset class="settings-group">
+        <legend>Aparência</legend>
+        <div class="palette-grid" id="palette-grid">
+          <label class="palette-option" data-palette="graphite"><input type="radio" name="theme" value="graphite"><span class="palette-preview"><i></i><i></i><i></i></span><span>Graphite</span></label>
+          <label class="palette-option" data-palette="daylight"><input type="radio" name="theme" value="daylight"><span class="palette-preview"><i></i><i></i><i></i></span><span>Daylight</span></label>
+          <label class="palette-option" data-palette="ocean"><input type="radio" name="theme" value="ocean"><span class="palette-preview"><i></i><i></i><i></i></span><span>Ocean</span></label>
+          <label class="palette-option" data-palette="violet"><input type="radio" name="theme" value="violet"><span class="palette-preview"><i></i><i></i><i></i></span><span>Violet</span></label>
+          <label class="palette-option" data-palette="forest"><input type="radio" name="theme" value="forest"><span class="palette-preview"><i></i><i></i><i></i></span><span>Forest</span></label>
+          <label class="palette-option" data-palette="amber"><input type="radio" name="theme" value="amber"><span class="palette-preview"><i></i><i></i><i></i></span><span>Amber</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="settings-group toggles">
+        <legend>Dashboard</legend>
+        <label><span>Mostrar relógio</span><input id="show-clock" type="checkbox" role="switch"></label>
+        <label><span>Mostrar data</span><input id="show-date" type="checkbox" role="switch"></label>
+        <label><span>Formato de 24 horas</span><input id="format-24" type="checkbox" role="switch"></label>
+        <label><span>Mostrar mais visitados</span><input id="show-top-sites" type="checkbox" role="switch"></label>
+        <label class="select-setting"><span>Busca padrão</span><select id="default-engine"></select></label>
+      </fieldset>
+
+      <fieldset class="settings-group">
+        <legend>Atalhos</legend>
+        <div class="shortcut-editor" id="shortcut-editor"></div>
+        <form class="add-shortcut" id="add-shortcut-form">
+          <label>Nome<input id="shortcut-name" maxlength="28" required placeholder="Ex.: Figma"></label>
+          <label>Descrição<input id="shortcut-description" maxlength="32" placeholder="Ex.: Design"></label>
+          <label class="full-row">Endereço<input id="shortcut-url" type="url" required placeholder="https://example.com"></label>
+          <button class="primary-button full-row" type="submit">Adicionar atalho</button>
+          <p class="form-error full-row" id="shortcut-error" role="alert"></p>
+        </form>
+      </fieldset>
+
+      <div class="settings-actions">
+        <button class="danger-button" id="reset-settings" type="button">Restaurar padrões</button>
+        <button class="primary-button" id="save-settings" type="button">Concluir</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module" src="dashboard.js"></script>
 </body>
 </html>
